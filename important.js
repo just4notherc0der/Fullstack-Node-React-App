@@ -23,7 +23,7 @@ Whenever heroku runs our app, it has the ability to inject ENV variables.
 These variables are set in the underlying runtime That the Node is running on top of.
 Essentially it is a way that Heroku passes some configurations to our app.
 
-First-Type deployment:
+First-Time deployment:
 1 - Create Heroku Account
 2 - Commit project code to Git, because by default, Heroku uses Git based deployment
     workflow
@@ -38,6 +38,32 @@ First-Type deployment:
     $git remote add heroku ...2nd link...
     $git push heroku master
     $git push (if we want to deploy to our own github repo too)
+
+When the project is deployed, we want to have a freash database taht is used for production app,
+and a separate database that is used for development.
+
+When we deploy our application to Heroku, there is an environment variable that is assigned by Heroku.
+We are going to use that variable to determine if we are in development or production environment.
+
+if(process.env.NODE_ENV === 'production') {
+  // return prod set of keys
+  module.exports = require('./prodkeys');
+} else {
+  // return dev set of keys
+  module.exports = require('./devkeys');
+}
+
+prodkeys.js should be committed to Heroku
+prodkeys.js file should look something like this:
+
+module.exports = {
+  googleClientID: process.env.GOOGLE_CLIENT_ID,
+  googleClientSecret: process.envGOOGLE_CLIENT_SECRET,
+  mongoURI: process.env.MONGO_URI,
+  cookieKey: process.env.COOKIE_KEY
+}
+
+All these env variables should be set on Heroku (or whatever platform).
 
 Google OAuth
 ---------------
@@ -166,15 +192,41 @@ does the opposite thing.
 
 req.logout() - automatically attached by passport, kills the cookie
 
+IN MORE DETAILS:
+
+Middlewares are defined with app.use()
+Middlewares are small pieces of code that modify the request in some way before they passport
+it to route handlers. They are a great location to place some logic that is common for
+many different route handlers.
+
+If we don't want middleware to be applied for every single route handler, we can wire it up in such a way
+that it preprocesses the request only for some route handlers.
+
+** diagram express middleware
+
+The cookie-session extracts the cookie data. It assigns the ID from a cookie to
+req.session. When we then pass that request object to passport, passport takes taht id from
+req.session and then passes it to deserializeUser...
+
+Another way to manage cookies is to use other middleware called express-session.
+express-session and cookie-session are different because cookie-session stores the
+id in the cookie, and express-session stores the refference in the cookie.
+
+** express-session diagram
+
+So basically cookie-session stores all of the relevant data directly inside of the cookie,
+while express-session stores all of the data in some like remote server-side data store, and
+whenever the request comes in, it takes the relevant data from the request and pulls
+the correcponding data from the data store on the server. Because data in the cookie is
+just a reference to that other data. Thats fucking confusing but i think i got it.
+
+So with express-session we can store a lot more data, and with cookie-session we cam
+store only as much data s fits unside of the cookie (around 4kb). Since in this app all
+we really care is the user ID, we use cookie-session.
 
 
-
-
-
-
-
-
-
+CLIENT SIDE
+---------------
 
 
 
