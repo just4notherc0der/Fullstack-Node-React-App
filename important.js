@@ -144,12 +144,27 @@ Sometimes when Mongoose is used inside of testing environments, model files will
 be required in multiple files in the project. Mongoose will be very confused when that
 happens, and it will think that we are trying to load multiple models called 'users'.
 
-So that is why we are requiring it in different fashion inside of 
+So that is why we are requiring it in different fashion inside of
 services/passport.js file.
 
+Passport gives us the callback function speifically to enable us to ex save that users info to a
+database. We have to stell it when we are done with it so it can keep going with authentication flow.
+That's what 'done' argument is for.
 
+passport.serializeUser - function that takes in returned user model (after 'done' is called)
+and it generates some piece of identifying information that we can associate with the user.
 
+We are using mongo id instead of google id for the cookie because if we had mutiple
+providers, it wouldn't make sense to use google ID
 
+** serialize/deserialize diagram
+
+serializeUser 'turns' a model into ID that gets sent in a cookie, and deserilizeUser
+does the opposite thing.
+
+** request -> cookie -> passport.. diagram
+
+req.logout() - automatically attached by passport, kills the cookie
 
 
 
