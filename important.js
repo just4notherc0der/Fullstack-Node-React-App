@@ -227,15 +227,109 @@ we really care is the user ID, we use cookie-session.
 
 CLIENT SIDE
 ---------------
+add this part in client/package.json
+"proxy": {
+  "/auth/google": {
+    "target": "http://localhost:5000"
+  }
+}
 
+Now when we specify /auth/google path somewhere in react application, it doesn't go to
+localhost:3000/auth/google (react), but localhost:5000 (express API endpoint).
 
+For this redirect to work, we have to specify http://localhost:3000/auth/google/callback
+as a valid redirect URI in our google developer console.
 
+So this is working because:
+** dev mode diagram
 
+Inside of the browser, whenever we go to localhost:3000, we will see our react application, because the
+application server that comes with create-react-app bootstrapped applications is going
+to return to the user a bundle.js file that is going to contain all of the development assets.
+(Like react library, redux and shit from client/package.json). So, when user tries
+to sign in with google by navigating to /auth/google, that request will go through proxy
+(which is part of create-react-app server), that proxy will forward the request to localhost:5000
+(express API server), and thats what we specified in client/package.json. So for every different API route
+taht our React app has to access, just register it inside of client/package.json.
+All of this is just for development mode.
 
+In production mode, this automacically works! In production, the create-react-app server
+does not even exist. In production, before we even deploy our project, we are going to build
+our react project.
 
+** Prod mode diagram
+create-react-app is going to take all of the frontend files, run babel and webpack,
+and save final build of our application into client/build folder. Then, when user
+comes to deployed application, we will just send them the HTML file and the newly built JS file
+That was just placed into that build folder.
 
+&npm run build (inside of client) - creates optimized production build and saves to build folder
 
+Browser will automatically prepend the domain name in production, and that is the adventage
+of using relative links.
 
+So create-react-app is amazing for us to use while we are developing our application, but also
+useful when we are deploying the production ready application. All of this can absolutely be accomplished
+with Webpack build process, this is just another way.
 
+whyy THE FUCK this architecture???
+----------------------------------
+
+Application copuld be made from 2 separate servers, one for API and one for React Client
+We didn't take that aproach because we are using cookies as authentication method in the app.
+That is the issue number one. If 2 servers were separate, browser would not be allowed to
+send same cookies to a server and a client domain. This is purely to prevent a security issue,
+and is a built in behavior in the browser.
+
+This way by using proxy (in dev mode), browser never even communicates with localhost:5000,
+Our React application is the one who does. Browser doesn't even know that the proxy exists.
+
+Browser actually has the ability to send cross domain requests that contain same cooke, but
+this way our life is easier because we don't have to worry about that xD
+
+** dev setup crazy diagram (Fuck U Stephen xD)
+** prod setup diagram
+
+FETCH
+----------
+
+finction getData() {
+  fetch('https://someurl.com')
+    .then(res => res.json())
+    .then(jsondata => console.log(jsondata));
+}
+
+Whenever we make a request with fetch, it is going to return a Promise. Tht promise is
+resolved with an object that represents the underlying request. When the promise is resolved, the
+.then() callback is executed.
+
+res.json() returns the promise of its own, which is resolved after the JSON in the request
+is ready for us to work with.
+
+This snippet of code is going to work only if user has modern browser.
+
+** fetch diagram?
+
+The sole purpose with this new ES6 syntax is to make working with promises easier.
+Under the hood everything is happenning exactly the same, but the syntax is prettier.
+The new syntax is called async await.
+First we define a function in code that contains some async code.
+1 - put async keyword in front of that function declaration.
+2 - put await keywords before promise
+3 - assign to some variables
+
+async function getData() {
+  const res = await fetch('.....');
+  const json = await res.json();
+  console.log(json);
+}
+
+async keyword can also be used with arrow functions.
+
+const getData = async () => {
+  const res = await fetch('.....');
+  const json = await res.json();
+  console.log(json);
+}
 
 */

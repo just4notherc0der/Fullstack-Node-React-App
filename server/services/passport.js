@@ -21,6 +21,7 @@ passport.use(
     clientSecret: keys.googleClientSecret,
     callbackURL: '/auth/google/callback'
   },
+  /* OLD CODE
   (accessToken, refreshToken, profile, done) => {
     User.findOne({ googleID: profile.id })
       .then((existingUser) => {
@@ -32,5 +33,14 @@ passport.use(
             .then((user) => done(null, user)); // null - error, user - model
         }
       })
-  })
-);
+  }*/
+  /* NEW CODE - works only with newer versions of NodeJS */
+  async (accessToken, refreshToken, profile, done) => {
+    const existingUser = await User.findOne({ googleID: profile.id });
+    if(existingUser) {
+      return done(null, existingUser);
+    }
+    const user =await new User({ googleID: profile.id }).save();
+    done(null, user);
+  }
+));
