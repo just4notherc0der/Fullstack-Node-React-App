@@ -1,13 +1,14 @@
 .navbar {
-  padding: 15px;
+  padding: 10px 15px;
   background: #0982cf;
+  margin-bottom: 25px;
 }
 
 .brand {
-  float: left;
   font-weight: bold;
   color: #fff;
   text-decoration: none;
+  line-height: 40px;
 }
 
 .links {
@@ -20,6 +21,7 @@
 
 .links li {
   margin: 0 10px;
+  display: inline-block;
 }
 
 .links li a {
