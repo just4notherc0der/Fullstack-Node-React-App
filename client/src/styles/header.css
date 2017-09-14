@@ -1,5 +1,5 @@
 .navbar {
-  padding: 10px 15px;
+  padding: 15px;
   background: #0982cf;
   margin-bottom: 25px;
 }
@@ -8,7 +8,7 @@
   font-weight: bold;
   color: #fff;
   text-decoration: none;
-  line-height: 40px;
+  /*line-height: 40px;*/
 }
 
 .links {
@@ -28,6 +28,15 @@
   text-decoration: none;
   color: #fff;
   font-weight: bold;
+}
+
+.add-credits {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  font-family: 'Raleway', sans-serif;
+  font-size: 16px;
 }
 
 .clearfix {

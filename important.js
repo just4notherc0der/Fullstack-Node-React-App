@@ -407,5 +407,14 @@ represents the charge. It can be seen in the console, The closest think to a tok
 is an id property. With this id property, we can make a follow up request to Stripe from
 our backend to actually bill the person.
 
+At application bootup time, we will retreive the information about the user.
+Whenever user pays some money, and we take that token and send it to our backend API, the API
+will do the follow up request with Stripe and after the user has been successfully charged,
+The server will update the number of credits that the user has, and it will send back
+the current user model, with new value of credits taht user has. This way we will always have the
+credits information available in authReducer.js. Another way to do this would be to create
+new credits reducer or something, but why bother when the information is already available
+inside of the authReducer.
+
 
 */
