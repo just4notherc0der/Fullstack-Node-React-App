@@ -416,5 +416,22 @@ credits information available in authReducer.js. Another way to do this would be
 new credits reducer or something, but why bother when the information is already available
 inside of the authReducer.
 
+On the backend we are going to use another Stripe library that will exchange the token from
+the front-end and exchange it for the actual charge from users credit card.
+
+$npm install --save stripe    *also read the docs, specifically charges section
+
+Basically we have to create the charge object that contains the configuration that
+describes what do we want to charge the user for.
+When creating the charge object, we have to specify the callback that is going to be
+executed when everything is complete. The npm stripe module that we installed instead
+of using the official stripe API also allows us to use a Promise instead of a regular callback.
+
+When the payment is complete, we increase the credits on the user object that comes in
+with every request(assigned by passport). However, we also have to handle the case if someone makes
+a request to this endpoint, but is not logged in. To do this, we can create a middleware
+that will be applied only to certain routes.
+* express route can accept more than one middleware
+
 
 */

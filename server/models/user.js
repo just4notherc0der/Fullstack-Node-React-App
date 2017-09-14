@@ -3,7 +3,11 @@ const Schema = mongoose.Schema;
 // const { Schema } = mongoose; ES6 destructuring
 
 const userSchema = new Schema({
-  googleID: String
+  googleID: String,
+  credits: {
+    type: Number,
+    default: 0
+  }
 });
 
 // create new collection 'users'

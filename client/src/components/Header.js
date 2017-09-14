@@ -19,7 +19,8 @@ class Header extends Component {
         //return 'Logged in';
         return [
           <li key="1"><StripeWrapper /></li>,
-          <li key="2"><a href='/api/logout'>Logout</a></li>
+          <li key="2">Credits: { this.props.auth.credits }</li>,
+          <li key="3"><a href='/api/logout'>Logout</a></li>
         ];
     }
   }
